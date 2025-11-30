@@ -1,0 +1,100 @@
+/* static/style.css - simple beginner-friendly styling */
+body {
+  font-family: Arial, sans-serif;
+  background: #f7f7f9;
+  color: #222;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 90%;
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 0 10px;
+}
+
+.site-header {
+  background: #3a8bbe;
+  color: white;
+  padding: 12px 0;
+}
+.site-header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.brand a { color: white; text-decoration: none; font-size: 20px; }
+nav a { color: white; margin-left: 12px; text-decoration: none; font-weight: 600; }
+
+.card {
+  background: white;
+  padding: 14px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  margin-bottom: 12px;
+}
+.card.small { padding: 10px; }
+
+h1, h2, h3 { margin: 10px 0; color: #153d5b; }
+.btn {
+  background: #2f8ad6;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+a.secondary { color: #666; margin-left: 8px; text-decoration: none; }
+
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin: 6px 0 12px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+button, .btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #2f8ad6;
+  color: white;
+}
+button.linklike {
+  background: none;
+  color: #c33;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.list { width: 100%; border-collapse: collapse; background: white; }
+.list th, .list td { padding: 8px 10px; border: 1px solid #eee; text-align: left; vertical-align: top; }
+.list thead th { background: #f1f7fb; }
+
+.flash { padding: 8px; margin-bottom: 8px; border-radius: 6px; }
+.flash.success { background: #e6fff0; color: #166a3a; }
+.flash.danger { background: #ffecec; color: #8a1f1f; }
+.flash.warning { background: #fff7e6; color: #8a5a00; }
+.flash.info { background: #e8f4ff; color: #175a9a; }
+
+.site-footer {
+  background: #f1f1f1;
+  padding: 12px 0;
+  margin-top: 24px;
+  text-align: center;
+  color: #666;
+}
+.cards { display: flex; gap: 12px; flex-wrap: wrap; }
+.card.small { flex: 1 1 200px; }

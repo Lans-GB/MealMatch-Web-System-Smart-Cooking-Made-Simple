@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Meal Plan{% endblock %}
+{% block content %}
+  <h2>Weekly Meal Plan</h2>
+  <p>Generated on: {{ generated_on }}</p>
+  <table class="list">
+    <thead><tr><th>Day</th><th>Recipe</th><th>Match (%)</th></tr></thead>
+    <tbody>
+      {% for p in plan %}
+        <tr>
+          <td>Day {{ p.day }}</td>
+          <td>{{ p.title }}</td>
+          <td>{{ "%.0f"|format(p.match) if p.match else '0' }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Candidate recipes (≥50% available)</h3>
+  {% if candidates %}
+    <ul>
+      {% for c in candidates %}
+        <li>{{ c.title }} — {{ "%.0f"|format(c.percent) }}% ({{ c.available }}/{{ c.total }} available)</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No candidate recipes meet the 50% availability threshold.</p>
+  {% endif %}
+{% endblock %}

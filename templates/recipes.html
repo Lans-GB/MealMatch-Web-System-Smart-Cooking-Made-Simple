@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Recipes{% endblock %}
+{% block content %}
+  <h2>Recipes (visible to all)</h2>
+  <p><a href="{{ url_for('add_recipe') }}" class="btn">Add recipe</a></p>
+  {% if recipes %}
+    <table class="list">
+      <thead><tr><th>Title</th><th>Creator</th><th>Ingredients</th><th>Actions</th></tr></thead>
+      <tbody>
+      {% for r in recipes %}
+        <tr>
+          <td>{{ r['title'] }}</td>
+          <td>{{ r['creator'] or 'Community' }}</td>
+          <td>
+            {% if recipe_ingredients.get(r['id']) %}
+              <ul>
+              {% for ri in recipe_ingredients[r['id']] %}
+                <li>{{ ri['ingredient_name'] }} ({{ ri['required_quantity'] }} {{ ri['unit'] }})</li>
+              {% endfor %}
+              </ul>
+            {% else %}
+              -
+            {% endif %}
+          </td>
+          <td>
+            <a href="{{ url_for('edit_recipe', id=r['id']) }}">Edit</a>
+            <form method="post" action="{{ url_for('delete_recipe', id=r['id']) }}" style="display:inline;">
+              <button type="submit" class="linklike">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No recipes yet.</p>
+  {% endif %}
+{% endblock %}

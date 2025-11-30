@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}{{ action or 'Add' }} Ingredient{% endblock %}
+{% block content %}
+  <h2>{{ action or 'Add' }} Ingredient</h2>
+  <form method="post" class="card">
+    <label>Name</label>
+    <input name="name" value="{{ ingredient['name'] if ingredient else '' }}" required>
+    <label>Quantity</label>
+    <input name="quantity" type="number" step="0.01" value="{{ ingredient['quantity'] if ingredient else '1' }}">
+    <label>Unit (e.g. pcs, g, ml)</label>
+    <input name="unit" value="{{ ingredient['unit'] if ingredient else 'pcs' }}">
+    <label>Notes</label>
+    <input name="notes" value="{{ ingredient['notes'] if ingredient else '' }}">
+    <div class="actions">
+      <button type="submit">{{ action or 'Add' }}</button>
+      <a class="secondary" href="{{ url_for('ingredients') }}">Cancel</a>
+    </div>
+  </form>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ recipe['title'] }}{% endblock %}
+{% block content %}
+  <h2>{{ recipe['title'] }}</h2>
+  <p><strong>Description:</strong> {{ recipe['description'] or '-' }}</p>
+  <h3>Ingredients</h3>
+  {% if ingredients %}
+    <ul>
+    {% for ing in ingredients %}
+      <li>{{ ing['ingredient_name'] }} — {{ ing['required_quantity'] }} {{ ing['unit'] }}</li>
+    {% endfor %}
+    </ul>
+  {% else %}
+    <p>No ingredients listed.</p>
+  {% endif %}
+
+  <h3>Cooking Instructions</h3>
+  {% if recipe['instructions'] %}
+    <div class="card"><pre style="white-space:pre-wrap">{{ recipe['instructions'] }}</pre></div>
+  {% else %}
+    <p>No instructions provided.</p>
+  {% endif %}
+
+  <p>
+    <a href="{{ url_for('export_recipe', id=recipe['id'], fmt='json') }}">Export JSON</a> |
+    <a href="{{ url_for('export_recipe', id=recipe['id'], fmt='csv') }}">Export CSV</a>
+  </p>
+  <p><a href="{{ url_for('recipes') }}">Back to recipes</a></p>
+{% endblock %}

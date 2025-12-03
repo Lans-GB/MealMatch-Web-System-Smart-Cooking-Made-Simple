@@ -14,10 +14,17 @@
           <td>{{ ing['unit'] }}</td>
           <td>{{ ing['notes'] }}</td>
           <td>
-            <a href="{{ url_for('edit_ingredient', id=ing['id']) }}">Edit</a>
-            <form method="post" action="{{ url_for('delete_ingredient', id=ing['id']) }}" style="display:inline;">
-              <button type="submit" class="linklike">Delete</button>
-            </form>
+          <a href="{{ url_for('edit_ingredient', id=ing['id']) }}">
+            <img src="{{ url_for('static', filename='image/pencil-square.png') }}" 
+              style="width:20px; height:20px;">
+          </a>
+          <form method="post" action="{{ url_for('delete_ingredient', id=ing['id']) }}" style="display:inline;">
+              <button type="submit" style="background:none; border:none; padding:0; cursor:pointer;">
+                  <img src="{{ url_for('static', filename='image/trash.png') }}" 
+                      style="width:20px; height:20px;">
+              </button>
+          </form>
+
           </td>
         </tr>
       {% endfor %}

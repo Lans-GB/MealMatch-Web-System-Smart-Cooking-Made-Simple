@@ -3,18 +3,21 @@
 {% block content %}
   <h2>{{ action or 'Add' }} Recipe</h2>
   <form method="post" class="card">
-    <label>Title</label>
+    <label>Title: </label>
     <input name="title" value="{{ recipe['title'] if recipe else '' }}" required>
-    <label>Description</label>
+    <label>Description: </label>
     <input name="description" value="{{ recipe['description'] if recipe else '' }}">
-    <label>Instructions</label>
+    <p></p>
+    <label>Instructions: </label>
     <textarea name="instructions">{{ recipe['instructions'] if recipe else '' }}</textarea>
-    <label>Ingredients (one per line, format: name|quantity|unit)</label>
+    <label>Ingredients: (one per line, format: name|quantity|unit)</label>
     <textarea name="ingredients_raw" rows="6">{{ raw_text if raw_text is defined else '' }}</textarea>
     <div class="actions">
+    <label>Cooking Instructions:</label>
+    <textarea name="instructions" rows="6" class="form-control">{{ recipe.instructions if recipe else '' }}</textarea>
       <button type="submit">{{ action or 'Add' }}</button>
       <a class="secondary" href="{{ url_for('recipes') }}">Cancel</a>
     </div>
   </form>
-  <p>Example lines: <code>egg|2|pcs</code> or <code>rice|200|g</code></p>
+  <p>Example Ingredients: <b>egg|2|pcs</b> or <b>rice|200|g</b></p>
 {% endblock %}

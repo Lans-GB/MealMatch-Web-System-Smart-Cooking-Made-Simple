@@ -1,4 +1,3 @@
-/* static/style.css - simple beginner-friendly styling */
 body {
   font-family: Arial, sans-serif;
   background: #f7f7f9;
@@ -15,9 +14,9 @@ body {
 }
 
 .site-header {
-  background: #3a8bbe;
+  background: #438b34;
   color: white;
-  padding: 12px 0;
+  padding: 1px 0;
 }
 .site-header .container {
   display: flex;
@@ -28,7 +27,7 @@ body {
 nav a { color: white; margin-left: 12px; text-decoration: none; font-weight: 600; }
 
 .card {
-  background: white;
+  background: rgb(95, 209, 101);
   padding: 14px;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
@@ -38,7 +37,7 @@ nav a { color: white; margin-left: 12px; text-decoration: none; font-weight: 600
 
 h1, h2, h3 { margin: 10px 0; color: #153d5b; }
 .btn {
-  background: #2f8ad6;
+  background: #2fd661;
   color: white;
   padding: 8px 12px;
   border-radius: 6px;
@@ -67,7 +66,7 @@ button, .btn {
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  background: #2f8ad6;
+  background: #2c8640;
   color: white;
 }
 button.linklike {
@@ -92,7 +91,7 @@ button.linklike {
 .site-footer {
   background: #f1f1f1;
   padding: 12px 0;
-  margin-top: 24px;
+  margin-top: 5px;
   text-align: center;
   color: #666;
 }

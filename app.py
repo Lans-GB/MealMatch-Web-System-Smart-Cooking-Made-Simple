@@ -1,4 +1,3 @@
-# app.py
 """
 MealMatch - Updated app.py
 Features added:
@@ -171,6 +170,7 @@ class MealPlanService:
         return a_date - timedelta(days=a_date.weekday())
 
     @staticmethod
+    @staticmethod
     def get_or_create_weekly_plan(user_id:int) -> Dict[str, Any]:
         today = date.today()
         week_start = MealPlanService._get_week_start(today)
@@ -179,12 +179,15 @@ class MealPlanService:
         # Check if user already has a plan with this week_start
         existing = db.query("SELECT * FROM mealplans WHERE user_id = ? AND week_start = ?", (user_id, week_start_iso), one=True)
         if existing:
-            # return stored plan
+            # parse stored JSON and return proper fields
             try:
-                plan = json.loads(existing["plan_json"]) if existing["plan_json"] else []
+                payload = json.loads(existing["plan_json"]) if existing["plan_json"] else {}
+                plan = payload.get("plan", [])
+                candidates = payload.get("candidates", [])
             except Exception:
                 plan = []
-            return {"plan": plan, "generated_on": existing["generated_on"], "week_start": week_start_iso}
+                candidates = []
+            return {"plan": plan, "generated_on": existing["generated_on"], "week_start": week_start_iso, "candidates": candidates}
 
         # else generate new plan and store it
         plan, candidates = MealPlanService._generate_plan(user_id)
@@ -205,7 +208,9 @@ class MealPlanService:
         recipes = db.query("SELECT * FROM recipes")
         recipe_list = []
         for rec in recipes:
-            rec_ing_rows = db.query("SELECT * FROM recipe_ingredients WHERE recipe_id = ?", (rec["id"],))
+            # Convert sqlite3.Row to dict and extract string values
+            rec_dict = dict(rec)
+            rec_ing_rows = db.query("SELECT * FROM recipe_ingredients WHERE recipe_id = ?", (rec_dict["id"],))
             total = len(rec_ing_rows)
             available = 0
             for ri in rec_ing_rows:
@@ -215,9 +220,9 @@ class MealPlanService:
                     available += 1
             percent = (available / total * 100) if total > 0 else 0
             recipe_list.append({
-                "id": rec["id"],
-                "title": rec["title"],
-                "description": rec["description"],
+                "id": rec_dict["id"],
+                "title": str(rec_dict["title"]),  # Ensure it's a string
+                "description": str(rec_dict.get("description", "")),
                 "available": available,
                 "total": total,
                 "percent": percent
@@ -235,13 +240,27 @@ class MealPlanService:
                 plan.append({"day": len(plan) + 1, "title": "No suitable recipe", "match": 0})
             else:
                 chosen = candidates[i % len(candidates)]
-                plan.append({"day": len(plan) + 1, "title": chosen["title"], "match": chosen["percent"], "recipe_id": chosen["id"]})
+                plan.append({
+                    "day": len(plan) + 1, 
+                    "title": str(chosen["title"]),  # Ensure it's a string
+                    "match": chosen["percent"], 
+                    "recipe_id": chosen["id"]
+                })
             i += 1
             if i > 100:  # safety
                 break
 
         # reduce candidate data for storage
-        slim_candidates = [{"id": c["id"], "title": c["title"], "percent": c["percent"], "available": c["available"], "total": c["total"]} for c in candidates]
+        slim_candidates = [
+            {
+                "id": c["id"], 
+                "title": str(c["title"]),  # Ensure it's a string
+                "percent": c["percent"], 
+                "available": c["available"], 
+                "total": c["total"]
+            } 
+            for c in candidates
+        ]
         return plan, slim_candidates
 
 #Helpers

@@ -1,46 +1,82 @@
 {% extends "base.html" %}
 {% block title %}Meal Plan{% endblock %}
 {% block content %}
-  <h2>Weekly Meal Plan</h2>
-  <p>Week starting: {{ week_start }}</p>
-  <p>Generated on: {{ generated_on }}</p>
+<div class="header-content" style="margin-bottom: 24px;">
+  <div>
+    <h2>Weekly Meal Plan</h2>
+    <p class="text-muted">
+      <i class="ph ph-calendar"></i> {{ week_start }} &nbsp;&bull;&nbsp;
+      <i class="ph ph-clock"></i> Generated: {{ generated_on }}
+    </p>
+  </div>
 
-  <form method="post" action="{{ url_for('regenerate_mealplan') }}">
-    <button type="submit">Regenerate this week's plan</button>
-  </form>
+  <div style="display: flex; gap: 10px;">
+    <form method="post" action="{{ url_for('regenerate_mealplan') }}">
+      <button type="submit" class="btn btn-primary">
+        <i class="ph ph-arrows-clockwise"></i> Regenerate Plan
+      </button>
+    </form>
+  </div>
+</div>
 
-  <table class="list" style="margin-top:12px;">
-    <thead><tr><th>Day</th><th>Recipe</th><th>Match (%)</th></tr></thead>
-    <tbody>
-      {% for p in plan %}
-        <tr>
-          <td>Day {{ p.day }}</td>
-          <td>
-            {% if p.recipe_id %}
-              <a href="{{ url_for('view_recipe', id=p.recipe_id) }}">{{ p.title }}</a>
-            {% else %}
-              {{ p.title }}
-            {% endif %}
-          </td>
-          <td>{{ "%.0f"|format(p.match) if p.match else '0' }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="cards" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+  {% for p in plan %}
+  <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+    <div style="margin-bottom: 12px;">
+      <div style="font-weight: 600; color: var(--primary-color); margin-bottom: 8px;">Day {{ p.day }}</div>
+      {% if p.recipe_id %}
+      <h3 style="margin: 0; font-size: 1.1rem; line-height: 1.3;">
+        <a href="{{ url_for('view_recipe', id=p.recipe_id) }}" style="text-decoration: none; color: inherit;">
+          {{ p.title }}
+        </a>
+      </h3>
+      {% else %}
+      <h3 style="margin: 0; font-size: 1.1rem; color: var(--text-muted); font-style: italic;">
+        {{ p.title }}
+      </h3>
+      {% endif %}
+    </div>
 
-  <p>
-    <a href="{{ url_for('export_mealplan', fmt='json') }}">Export Plan (JSON)</a> |
-    <a href="{{ url_for('export_mealplan', fmt='csv') }}">Export Plan (CSV)</a>
-  </p>
+    <div
+      style="border-top: 1px solid var(--border-color); padding-top: 12px; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center;">
+      <span style="color: var(--text-muted);">Match</span>
+      <span
+        style="font-weight: 600; color: {% if p.match and p.match >= 80 %}var(--success-text){% elif p.match and p.match >= 50 %}var(--primary-color){% else %}var(--text-muted){% endif %};">
+        {{ "%.0f"|format(p.match) if p.match else '0' }}%
+      </span>
+    </div>
+  </div>
+  {% endfor %}
+</div>
 
-  <h3>Candidate recipes (≥50% available)</h3>
+<div style="margin-top: 24px; text-align: right;">
+  <a href="{{ url_for('export_mealplan', fmt='json') }}" class="btn btn-sm btn-secondary">
+    <i class="ph ph-file-code"></i> Export JSON
+  </a>
+  <a href="{{ url_for('export_mealplan', fmt='csv') }}" class="btn btn-sm btn-secondary">
+    <i class="ph ph-file-csv"></i> Export CSV
+  </a>
+</div>
+
+<hr style="margin: 40px 0; border: 0; border-top: 1px solid var(--border-color);">
+
+<div class="card">
+  <h3 style="margin-top: 0;">Candidate Recipes <span
+      style="font-weight: normal; font-size: 0.8em; color: var(--text-muted);">(≥50% available)</span></h3>
   {% if candidates %}
-    <ul>
-      {% for c in candidates %}
-        <li>{{ c.title }} — {{ "%.0f"|format(c.percent) }}% ({{ c.available }}/{{ c.total }} available)</li>
-      {% endfor %}
-    </ul>
+  <div style="display: grid; gap: 10px;">
+    {% for c in candidates %}
+    <div
+      style="display: flex; justify-content: space-between; padding: 10px; background: var(--bg-color); border-radius: var(--radius-sm);">
+      <strong>{{ c.title }}</strong>
+      <span style="color: var(--text-muted);">
+        {{ "%.0f"|format(c.percent) }}% ({{ c.available }}/{{ c.total }})
+      </span>
+    </div>
+    {% endfor %}
+  </div>
   {% else %}
-    <p>No candidate recipes meet the 50% availability threshold.</p>
+  <p class="text-muted">No candidate recipes meet the 50% availability threshold.</p>
   {% endif %}
+</div>
 {% endblock %}

@@ -1,36 +1,57 @@
 {% extends "base.html" %}
 {% block title %}Ingredients{% endblock %}
 {% block content %}
+<div class="header-content" style="margin-bottom: 24px;">
   <h2>Your Ingredients</h2>
-  <p><a href="{{ url_for('add_ingredient') }}" class="btn">Add ingredient</a></p>
-  {% if ingredients %}
+  <a href="{{ url_for('add_ingredient') }}" class="btn btn-primary">
+    <i class="ph ph-plus"></i> Add Ingredient
+  </a>
+</div>
+
+{% if ingredients %}
+<div class="card" style="padding: 0;">
+  <div class="list-container">
     <table class="list">
-      <thead><tr><th>Name</th><th>Quantity</th><th>Unit</th><th>Notes</th><th>Actions</th></tr></thead>
-      <tbody>
-      {% for ing in ingredients %}
+      <thead>
         <tr>
-          <td>{{ ing['name'] }}</td>
+          <th>Name</th>
+          <th>Quantity</th>
+          <th>Unit</th>
+          <th>Notes</th>
+          <th style="width: 100px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ing in ingredients %}
+        <tr>
+          <td><strong>{{ ing['name'] }}</strong></td>
           <td>{{ ing['quantity'] }}</td>
           <td>{{ ing['unit'] }}</td>
-          <td>{{ ing['notes'] }}</td>
-          <td>
-          <a href="{{ url_for('edit_ingredient', id=ing['id']) }}">
-            <img src="{{ url_for('static', filename='image/pencil-square.png') }}" 
-              style="width:20px; height:20px;">
-          </a>
-          <form method="post" action="{{ url_for('delete_ingredient', id=ing['id']) }}" style="display:inline;">
-              <button type="submit" style="background:none; border:none; padding:0; cursor:pointer;">
-                  <img src="{{ url_for('static', filename='image/trash.png') }}" 
-                      style="width:20px; height:20px;">
+          <td style="color: var(--text-muted);">{{ ing['notes'] }}</td>
+          <td style="display: flex; gap: 8px;">
+            <a href="{{ url_for('edit_ingredient', id=ing['id']) }}" class="btn btn-sm btn-secondary"
+              style="padding: 6px;" title="Edit">
+              <i class="ph ph-pencil-simple"></i>
+            </a>
+            <form method="post" action="{{ url_for('delete_ingredient', id=ing['id']) }}" style="display:inline;"
+              onsubmit="return confirm('Delete {{ ing.name }}?');">
+              <button type="submit" class="btn btn-sm btn-danger" style="padding: 6px;" title="Delete">
+                <i class="ph ph-trash"></i>
               </button>
-          </form>
-
+            </form>
           </td>
         </tr>
-      {% endfor %}
+        {% endfor %}
       </tbody>
     </table>
-  {% else %}
-    <p>No ingredients yet.</p>
-  {% endif %}
+  </div>
+</div>
+{% else %}
+<div class="card" style="text-align: center; padding: 40px;">
+  <i class="ph ph-basket" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 16px;"></i>
+  <h3>No ingredients yet</h3>
+  <p style="color: var(--text-muted); margin-bottom: 24px;">Add your pantry items to start finding recipes.</p>
+  <a href="{{ url_for('add_ingredient') }}" class="btn btn-primary">Add Your First Ingredient</a>
+</div>
+{% endif %}
 {% endblock %}

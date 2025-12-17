@@ -1,23 +1,43 @@
 {% extends "base.html" %}
 {% block title %}{{ action or 'Add' }} Recipe{% endblock %}
 {% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
   <h2>{{ action or 'Add' }} Recipe</h2>
   <form method="post" class="card">
-    <label>Title: </label>
-    <input name="title" value="{{ recipe['title'] if recipe else '' }}" required>
-    <label>Description: </label>
-    <input name="description" value="{{ recipe['description'] if recipe else '' }}">
-    <p></p>
-    <label>Instructions: </label>
-    <textarea name="instructions">{{ recipe['instructions'] if recipe else '' }}</textarea>
-    <label>Ingredients: (one per line, format: name|quantity|unit)</label>
-    <textarea name="ingredients_raw" rows="6">{{ raw_text if raw_text is defined else '' }}</textarea>
-    <div class="actions">
-    <label>Cooking Instructions:</label>
-    <textarea name="instructions" rows="6" class="form-control">{{ recipe.instructions if recipe else '' }}</textarea>
-      <button type="submit">{{ action or 'Add' }}</button>
-      <a class="secondary" href="{{ url_for('recipes') }}">Cancel</a>
+    <div class="form-group">
+      <label>Dish Name</label>
+      <input type="text" name="title" value="{{ recipe['title'] if recipe else '' }}" required
+        placeholder="Recipe Name (e.g. Grandma's Apple Pie)">
+    </div>
+
+    <div class="form-group">
+      <label>Description (Optional)</label>
+      <input type="text" name="description" value="{{ recipe['description'] if recipe else '' }}"
+        placeholder="Brief description of the dish">
+    </div>
+
+    <div class="form-group">
+      <label>Cooking Instructions</label>
+      <textarea name="instructions" rows="8"
+        placeholder="Step 1: Preheat oven...&#10;Step 2: Mix ingredients...">{{ recipe['instructions'] if recipe else '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Ingredients <span style="font-weight: normal; font-size: 0.9em; color: var(--text-muted);">(Format:
+          name|quantity|unit)</span></label>
+      <textarea name="ingredients_raw" rows="6"
+        placeholder="Example:&#10;Egg|2|pcs&#10;Flour|500|g&#10;Milk|100|ml">{{ raw_text if raw_text is defined else '' }}</textarea>
+      <small style="display: block; margin-top: 5px; color: var(--text-muted);">
+        One ingredient per line. Use standard units like g, ml, pcs, cups.
+      </small>
+    </div>
+
+    <div class="actions" style="margin-top: 24px; justify-content: flex-end;">
+      <a class="btn btn-secondary" href="{{ url_for('recipes') }}">Cancel</a>
+      <button type="submit" class="btn btn-primary">
+        <i class="ph ph-check"></i> {{ action or 'Save' }} Recipe
+      </button>
     </div>
   </form>
-  <p>Example Ingredients: <b>egg|2|pcs</b> or <b>rice|200|g</b></p>
+</div>
 {% endblock %}

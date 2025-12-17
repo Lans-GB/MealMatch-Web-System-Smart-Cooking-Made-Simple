@@ -1,72 +1,73 @@
 {% extends "base.html" %}
 {% block title %}Recipes{% endblock %}
 {% block content %}
-  <h2>Recipes (visible to all)</h2>
-  <p><a href="{{ url_for('add_recipe') }}" class="btn">Add recipe</a></p>
-  
-  {% if recipes %}
-    <table class="list">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Creator</th>
-          <th>Ingredients</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for r in recipes %}
-          <tr>
-            <td>{{ r['title'] }}</td>
-            <td>{{ r['creator'] or 'Community' }}</td>
-            <td>
-              {% if recipe_ingredients.get(r['id']) %}
-                <ul style="margin: 0; padding-left: 15px;">
-                  {% for ri in recipe_ingredients[r['id']] %}
-                    <li>{{ ri['ingredient_name'] }} ({{ ri['required_quantity'] }} {{ ri['unit'] }})</li>
-                  {% endfor %}
-                </ul>
-              {% else %}
-                -
-              {% endif %}
-            </td>
-            <td>
-              <!-- View -->
-              <a href="{{ url_for('view_recipe', id=r['id']) }}" title="View Recipe">
-                <img src="{{ url_for('static', filename='image/view.png') }}" 
-                     style="width:20px; height:20px; margin:0 5px; vertical-align:middle;">
-              </a>
-              
-              <!-- Edit Icon -->
-              <a href="{{ url_for('edit_recipe', id=r['id']) }}" title="Edit Recipe">
-                <img src="{{ url_for('static', filename='image/pencil-square.png') }}" 
-                     style="width:20px; height:20px; margin:0 5px; vertical-align:middle;">
-              </a>
-                        
-              <!-- Delete Icon -->
-              <form method="post" 
-                    action="{{ url_for('delete_recipe', id=r['id']) }}" 
-                    style="display:inline;"
-                    onsubmit="return confirm('Are you sure you want to delete this recipe?');">
-                <button type="submit" 
-                        style="background:none; border:none; padding:0; cursor:pointer;"
-                        title="Delete Recipe">
-                  <img src="{{ url_for('static', filename='image/trash.png') }}" 
-                       style="width:20px; height:20px; vertical-align:middle;">
-                </button>
-              </form>
-              
-              <br>
-              
-              <!-- Export links (text) -->
-              <a href="{{ url_for('export_recipe', id=r['id'], fmt='json') }}">Export JSON</a> |
-              <a href="{{ url_for('export_recipe', id=r['id'], fmt='csv') }}">Export CSV</a>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p>No recipes yet.</p>
-  {% endif %}
+<div class="header-content" style="margin-bottom: 24px;">
+  <h2>Recipes</h2>
+  <a href="{{ url_for('add_recipe') }}" class="btn btn-primary">
+    <i class="ph ph-plus"></i> Add Recipe
+  </a>
+</div>
+
+{% if recipes %}
+<div class="cards">
+  {% for r in recipes %}
+  <div class="card" style="display: flex; flex-direction: column;">
+    <div style="flex-grow: 1;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+        <h3 style="margin: 0; font-size: 1.25rem;">{{ r['title'] }}</h3>
+        <span
+          style="font-size: 0.8rem; background: var(--info-bg); color: var(--info-text); padding: 2px 8px; border-radius: 12px;">
+          {{ r['creator'] or 'Community' }}
+        </span>
+      </div>
+
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">
+        {% if recipe_ingredients.get(r['id']) %}
+        <i class="ph-fill ph-basket"></i> {{ recipe_ingredients[r['id']]|length }} Ingredients
+        {% else %}
+        <i class="ph-fill ph-basket"></i> No ingredients listed
+        {% endif %}
+      </p>
+    </div>
+
+    <div
+      style="border-top: 1px solid var(--border-color); padding-top: 16px; margin-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+      <a href="{{ url_for('view_recipe', id=r['id']) }}" class="btn btn-sm btn-secondary" title="View">
+        <i class="ph ph-eye"></i> View
+      </a>
+
+      <div class="actions">
+        <a href="{{ url_for('edit_recipe', id=r['id']) }}" style="color: var(--text-muted); margin-right: 8px;"
+          title="Edit">
+          <i class="ph ph-pencil-simple" style="font-size: 1.2rem;"></i>
+        </a>
+
+        <form method="post" action="{{ url_for('delete_recipe', id=r['id']) }}" style="display:inline;"
+          onsubmit="return confirm('Are you sure you want to delete this recipe?');">
+          <button type="submit"
+            style="background:none; border:none; padding:0; cursor:pointer; color: var(--error-text);" title="Delete">
+            <i class="ph ph-trash" style="font-size: 1.2rem;"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div style="margin-top: 10px; font-size: 0.8rem; text-align: right;">
+      <a href="{{ url_for('export_recipe', id=r['id'], fmt='json') }}"
+        style="color: var(--primary-color); text-decoration: none;">JSON</a>
+      <span style="color: var(--border-color);">|</span>
+      <a href="{{ url_for('export_recipe', id=r['id'], fmt='csv') }}"
+        style="color: var(--primary-color); text-decoration: none;">CSV</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card" style="text-align: center; padding: 40px;">
+  <i class="ph ph-book-open" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 16px;"></i>
+  <h3>No recipes found</h3>
+  <p style="color: var(--text-muted); margin-bottom: 24px;">Start by creating your own recipe or check back later.</p>
+  <a href="{{ url_for('add_recipe') }}" class="btn btn-primary">Create Recipe</a>
+</div>
+{% endif %}
 {% endblock %}

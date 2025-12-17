@@ -1,46 +1,98 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MealMatch - {% block title %}{% endblock %}</title>
+
+  <!-- Google Fonts: Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
-  <header class="site-header">
-    <div class="container">
-      <h1 class="brand"><a href="{{ url_for('dashboard') }}">MealMatch</a></h1>
-      <nav>
-        {% if session.get('user_id') %}
-          <a href="{{ url_for('dashboard') }}">Dashboard</a>
-          <a href="{{ url_for('ingredients') }}">Ingredients</a>
-          <a href="{{ url_for('recipes') }}">Recipes</a>
-          <a href="{{ url_for('mealplan') }}">Meal Plan</a>
-          <a href="{{ url_for('logout') }}">Logout</a>
-        {% else %}
-          <a href="{{ url_for('login') }}">Login</a>
-          <a href="{{ url_for('register') }}">Register</a>
-        {% endif %}
-      </nav>
-    </div>
-  </header>
+  <div class="app-wrapper">
+    <header class="site-header">
+      <div class="container header-content">
+        <a href="{{ url_for('dashboard') }}" class="brand">
+          <i class="ph-fill ph-cooking-pot"></i>
+          <span>MealMatch</span>
+        </a>
+        <button class="mobile-menu-toggle" aria-label="Toggle Menu">
+          <i class="ph ph-list"></i>
+        </button>
+        <nav class="main-nav">
+          {% if session.get('user_id') %}
+          <a href="{{ url_for('dashboard') }}" class="nav-link"><i class="ph ph-squares-four"></i> Dashboard</a>
+          <a href="{{ url_for('ingredients') }}" class="nav-link"><i class="ph ph-carrot"></i> Ingredients</a>
+          <a href="{{ url_for('recipes') }}" class="nav-link"><i class="ph ph-book-open"></i> Recipes</a>
+          <a href="{{ url_for('mealplan') }}" class="nav-link"><i class="ph ph-calendar-check"></i> Meal Plan</a>
+          <div class="nav-divider"></div>
+          <a href="{{ url_for('logout') }}" class="nav-link logout"><i class="ph ph-sign-out"></i> Logout</a>
+          {% else %}
+          <a href="{{ url_for('login') }}" class="nav-link"><i class="ph ph-sign-in"></i> Login</a>
+          <a href="{{ url_for('register') }}" class="nav-link btn-primary">Register</a>
+          {% endif %}
+        </nav>
+      </div>
+    </header>
 
-  <main class="container">
-    {% with messages = get_flashed_messages(with_categories=true) %}
+    <main class="container page-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-        <div class="flash-messages">
-          {% for cat, msg in messages %}
-            <div class="flash {{cat}}">{{ msg }}</div>
-          {% endfor %}
+      <div class="flash-messages">
+        {% for cat, msg in messages %}
+        <div class="flash {{cat}}">
+          <i
+            class="ph-fill {% if cat == 'success' %}ph-check-circle{% elif cat == 'danger' %}ph-warning-circle{% else %}ph-info{% endif %}"></i>
+          <span>{{ msg }}</span>
         </div>
+        {% endfor %}
+      </div>
       {% endif %}
-    {% endwith %}
-    {% block content %}{% endblock %}
-  </main>
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <small>• MealMatch • Group 07 • BSIT 2107 • {{ now() if false else '' }}</small>
-    </div>
-  </footer>
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <div class="footer-brand">
+          <i class="ph-fill ph-cooking-pot"></i> MealMatch
+        </div>
+        <div class="footer-info">
+          <small>&copy; {{ now() if false else '2025' }} MealMatch Group 07 • BSIT 2107</small>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggle = document.querySelector('.mobile-menu-toggle');
+      const nav = document.querySelector('.main-nav');
+
+      if (toggle && nav) {
+        toggle.addEventListener('click', () => {
+          nav.classList.toggle('active');
+          const icon = toggle.querySelector('i');
+          if (nav.classList.contains('active')) {
+            icon.classList.remove('ph-list');
+            icon.classList.add('ph-x');
+          } else {
+            icon.classList.remove('ph-x');
+            icon.classList.add('ph-list');
+          }
+        });
+      }
+    });
+  </script>
 </body>
+
 </html>

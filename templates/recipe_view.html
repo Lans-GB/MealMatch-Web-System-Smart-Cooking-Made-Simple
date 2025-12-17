@@ -1,29 +1,54 @@
 {% extends "base.html" %}
 {% block title %}{{ recipe['title'] }}{% endblock %}
 {% block content %}
-  <h2>{{ recipe['title'] }}</h2>
-  <p><strong>Description:</strong> {{ recipe['description'] or '-' }}</p>
-  <h3>Ingredients</h3>
-  {% if ingredients %}
-    <ul>
-    {% for ing in ingredients %}
-      <li>{{ ing['ingredient_name'] }} — {{ ing['required_quantity'] }} {{ ing['unit'] }}</li>
-    {% endfor %}
-    </ul>
-  {% else %}
-    <p>No ingredients listed.</p>
-  {% endif %}
+<a href="{{ url_for('recipes') }}" class="btn btn-sm btn-secondary" style="margin-bottom: 20px; display: inline-flex;">
+  <i class="ph ph-arrow-left"></i> Back to Recipes
+</a>
 
-  <h3>Cooking Instructions</h3>
-  {% if recipe['instructions'] %}
-    <div class="card"><pre style="white-space:pre-wrap">{{ recipe['instructions'] }}</pre></div>
-  {% else %}
-    <p>No instructions provided.</p>
-  {% endif %}
+<div class="card">
+  <div
+    style="border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start;">
+    <div>
+      <h1 style="margin: 0; color: var(--primary-color);">{{ recipe['title'] }}</h1>
+      <p style="color: var(--text-muted); margin: 5px 0 0 0;">{{ recipe['description'] or 'No description provided.' }}
+      </p>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <a href="{{ url_for('export_recipe', id=recipe['id'], fmt='json') }}" class="btn btn-sm btn-secondary">JSON</a>
+      <a href="{{ url_for('export_recipe', id=recipe['id'], fmt='csv') }}" class="btn btn-sm btn-secondary">CSV</a>
+    </div>
+  </div>
 
-  <p>
-    <a href="{{ url_for('export_recipe', id=recipe['id'], fmt='json') }}">Export JSON</a> |
-    <a href="{{ url_for('export_recipe', id=recipe['id'], fmt='csv') }}">Export CSV</a>
-  </p>
-  <p><a href="{{ url_for('recipes') }}">Back to recipes</a></p>
+  <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
+    <div style="background: var(--bg-color); padding: 20px; border-radius: var(--radius-sm);">
+      <h3 style="margin-top: 0; display: flex; align-items: center; gap: 8px;">
+        <i class="ph-fill ph-basket"></i> Ingredients
+      </h3>
+      {% if ingredients %}
+      <ul style="list-style: none; padding: 0; margin: 0;">
+        {% for ing in ingredients %}
+        <li
+          style="padding: 8px 0; border-bottom: 1px dashed var(--border-color); display: flex; justify-content: space-between;">
+          <span>{{ ing['ingredient_name'] }}</span>
+          <strong style="color: var(--primary-color);">{{ ing['required_quantity'] }} {{ ing['unit'] }}</strong>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="text-muted">No ingredients listed.</p>
+      {% endif %}
+    </div>
+
+    <div>
+      <h3 style="margin-top: 0; display: flex; align-items: center; gap: 8px;">
+        <i class="ph-fill ph-check-circle"></i> Instructions
+      </h3>
+      {% if recipe['instructions'] %}
+      <div style="white-space: pre-wrap; line-height: 1.8;">{{ recipe['instructions'] }}</div>
+      {% else %}
+      <p class="text-muted">No instructions provided.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}

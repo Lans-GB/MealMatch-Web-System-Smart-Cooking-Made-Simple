@@ -1,22 +1,54 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
-  <h2>Welcome, {{ user['username'] }}</h2>
-  <div class="cards">
-    <div class="card small">
-      <h3>Ingredients</h3>
-      <p>{{ ing_count }} items</p>
-      <p><a href="{{ url_for('ingredients') }}">Manage ingredients</a></p>
+<div class="dashboard-header">
+  <h2>Welcome back, {{ user['username'] }}!</h2>
+  <p class="text-muted">Here's what's happening in your kitchen today.</p>
+</div>
+
+<div class="dashboard-stats">
+  <div class="stat-card">
+    <div class="stat-icon green">
+      <i class="ph ph-carrot"></i>
     </div>
-    <div class="card small">
-      <h3>Recipes</h3>
-      <p>{{ rec_count }} recipes</p>
-      <p><a href="{{ url_for('recipes') }}">Manage recipes</a></p>
-    </div>
-    <div class="card small">
-      <h3>Meal Plan</h3>
-      <p>Generate weekly plan</p>
-      <p><a href="{{ url_for('mealplan') }}">Generate plan</a></p>
+    <div class="stat-info">
+      <h3>{{ ing_count }}</h3>
+      <p>Ingredients</p>
+      <a href="{{ url_for('ingredients') }}" class="btn btn-sm btn-secondary"
+        style="margin-top: 10px; width: 100%">Manage</a>
     </div>
   </div>
+
+  <div class="stat-card">
+    <div class="stat-icon blue">
+      <i class="ph ph-book-open"></i>
+    </div>
+    <div class="stat-info">
+      <h3>{{ rec_count }}</h3>
+      <p>Recipes</p>
+      <a href="{{ url_for('recipes') }}" class="btn btn-sm btn-secondary"
+        style="margin-top: 10px; width: 100%">Discover</a>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon amber">
+      <i class="ph ph-calendar-check"></i>
+    </div>
+    <div class="stat-info">
+      <h3>Plan</h3>
+      <p>Weekly Meals</p>
+      <a href="{{ url_for('mealplan') }}" class="btn btn-sm btn-accent"
+        style="margin-top: 10px; width: 100%">Generate</a>
+    </div>
+  </div>
+</div>
+
+<div class="quick-actions card" style="margin-top: 20px;">
+  <h3><i class="ph ph-lightning"></i> Quick Actions</h3>
+  <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <a href="{{ url_for('ingredients') }}" class="btn btn-primary"><i class="ph ph-plus"></i> Add Ingredient</a>
+    <a href="{{ url_for('recipes') }}" class="btn btn-secondary"><i class="ph ph-magnifying-glass"></i> Find Recipe</a>
+  </div>
+</div>
 {% endblock %}
